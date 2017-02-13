@@ -1,0 +1,31 @@
+﻿@*@model IEnumerable<SportsStore.Models.Entities.Product> РАНЬШЕ МЫ ПЕРЕДОВАЛИ ТАКУЮ МОДЕЛЬ, НО ПОСЛЕ
+    ОБЪЕДЕНЕНИЯ ДВУХ КЛАССОВ МОДЕЛЬ ИЗМЕНИЛАСЬ*@
+
+@model SportsStore.Models.ProductsListViewModel
+
+@{
+    ViewBag.Title = "Продукты";
+}
+
+@foreach (var item in Model.Products)
+{
+    @*<div class="item">
+        <h3>@item.Name</h3>
+        @item.Description
+        <h4>@item.Price.ToString("c")</h4>
+    </div>*@
+
+    //Кусок кода выше, мы вынесли в частичное представление 
+    //Что позволяет сократить код в представлении
+
+    Html.RenderPartial("ProductSummary", item);
+}
+
+<div>
+    @Html.PageLinks(Model.PagingInfo, x=> Url.Action("List", new { page = x}))
+
+    @*Мы до сих пор получаем немного кривые ссылки по типу http://localhost/?page=2
+    но мы можем их легко поменять на другие испольхуя схему URL
+    Для этого нам нужно только добавить новый роут в метод
+    RegisterRoutes в файле RouteConfig.cs, который вы найдете в папке App_Start.*@
+</div>
