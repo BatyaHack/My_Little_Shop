@@ -16,6 +16,9 @@ namespace SportsStore.Models
         public IEnumerable<Product> Products { get; set; } //класс Products
         public PagingInfo PagingInfo { get; set; } // класс PagingInfo
 
-        //Теперь нум нужно обновить List что бы он передавал в модель ProductsListViewModel, а не Products      
+        //Теперь нум нужно обновить List что бы он передавал в модель ProductsListViewModel, а не Products   
+        
+        //Добавляем выбор по категориям
+        public string CurrentCategory { get; set; }   
     }
 }

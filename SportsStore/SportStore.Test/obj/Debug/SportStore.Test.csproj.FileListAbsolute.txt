@@ -14,7 +14,6 @@ D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\roslyn\V
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\SportStore.Test.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\SportStore.Test.pdb
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\Castle.Core.dll
-D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\Microsoft.Web.Infrastructure.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\Moq.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\SportsStore.dll
@@ -43,7 +42,6 @@ D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\ru\Syste
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\ru\System.Web.WebPages.resources.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\ru\System.Web.WebPages.Deployment.resources.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\ru\System.Web.WebPages.Razor.resources.dll
-D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\bin\Debug\ru\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\obj\Debug\SportStore.Test.csprojResolveAssemblyReference.cache
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\obj\Debug\SportStore.Test.dll
 D:\C#Porogram\ASP.NET\SportsStore\SportsStore\SportStore.Test\obj\Debug\SportStore.Test.pdb

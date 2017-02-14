@@ -18,7 +18,7 @@ namespace SportsStore.Controllers
             this.repository = productRepository;
         }
 
-        public ViewResult List(int page = 1) // ИМЕНОВАНЫЙ ПАРАМЕТР
+        public ViewResult List(string category ,int page = 1) // ИМЕНОВАНЫЙ ПАРАМЕТР
         {
             #region 1 
             //Передаем модель
@@ -42,14 +42,23 @@ namespace SportsStore.Controllers
 
             ProductsListViewModel model = new ProductsListViewModel
             {
-                Products = repository.Products.OrderBy(p => p.ProductID).Skip((page - 1) * PageSize).Take(PageSize),
+                Products = repository.Products.Where(p => category == null || p.Category == category).OrderBy(p => p.ProductID).Skip((page - 1) * PageSize).Take(PageSize),
                 PagingInfo = new PagingInfo
                 {
                     CurrentPage = page,
                     ItemsPerPage = PageSize,
-                    TotalItems = repository.Products.Count()
-                }
+                    //TotalItems = repository.Products.Count() Теперь нам нужно подправить категорию, что бы ссылки считались не поколичеству товара во все БД, а только кол-во товаров в определенной категории
+
+                    TotalItems = category == null ? repository.Products.Count() : repository.Products.Where(e => e.Category == category).Count(), //ДЛЯ ЭТОГО ЕСТЬ МОДУЛЬНЫЙ ТЕСТ
+                },
+                CurrentCategory = category //После того как мі добавили возможность вы борка по категориям (пареметр category, Where в LINQ и новое свойство в классе ProductsListViewModel)
+                                           //Мы должны заново расчитать PagingInfo.TotalItems, так как после добавление категории она расчитывается не верно
+
+                //ТАКЖЕ ЕСТЬ ТЕСТ
             };
+
+            //Также нам опять нудно будет подправить роут в файле RouteConfig что бы category передавался не черех /?category=Чтото
+            // а через нормальные URL
 
             return View(model);
         

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc; //Нужно ставить через nuget Asp.Net MVC
 using SportsStore.HtmlHelpers;
+using Microsoft.CSharp;
 
 namespace SportStore.Test
 {
@@ -99,7 +100,7 @@ namespace SportStore.Test
             ProductController controller = new ProductController(mock.Object);
             controller.PageSize = 3;
 
-            ProductsListViewModel result = (ProductsListViewModel)controller.List().Model;
+            ProductsListViewModel result = (ProductsListViewModel)controller.List(null).Model;
 
             PagingInfo pageInfo = result.PagingInfo;
             Assert.AreEqual(pageInfo.CurrentPage, 1);
@@ -127,7 +128,7 @@ namespace SportStore.Test
             ProductController controller = new ProductController(mock.Object);
             controller.PageSize = 3;
 
-            ProductsListViewModel result = (ProductsListViewModel)controller.List().Model;
+            ProductsListViewModel result = (ProductsListViewModel)controller.List(null).Model;
 
             Product[] arry = result.Products.ToArray();
             Assert.IsTrue(arry.Length == 3);
@@ -135,5 +136,102 @@ namespace SportStore.Test
             Assert.AreEqual(arry[1].Name, "P2");
             Assert.AreEqual(arry[2].Name, "P3");
         }
+
+        //Тестируем правильно ли у нас выбирается категория
+        [TestMethod]
+        public void Can_Filter_Products()
+        {
+            Mock<IProductsRepository> mock = new Mock<IProductsRepository>();
+            mock.Setup(m => m.Products).Returns(new Product[] {
+                 new Product {ProductID = 1, Name = "P1", Category="Cat1"},
+                 new Product {ProductID = 2, Name = "P2", Category="Cat2"},
+                 new Product {ProductID = 3, Name = "P3", Category="Cat1"},
+                 new Product {ProductID = 4, Name = "P4", Category="Cat1"},
+                 new Product {ProductID = 5, Name = "P5", Category="Cat3"},
+                 new Product {ProductID = 5, Name = "P5", Category="Cat1"} // а вот эта строчка уже не попадает в результа
+            }.AsQueryable());
+
+            ProductController controller = new ProductController(mock.Object);
+            controller.PageSize = 3;
+
+            Product[] result = ((ProductsListViewModel)controller.List("Cat1", 1).Model).Products.ToArray();
+
+            Assert.IsTrue(result.Length == 3);
+            Assert.IsTrue(result[0].Category == "Cat1" && result[0].Name == "P1");
+            Assert.IsTrue(result[1].Category == "Cat1" && result[1].Name == "P3");
+            Assert.IsTrue(result[2].Category == "Cat1" && result[2].Name == "P4");
+        }
+
+        [TestMethod]
+        public void Can_Create_Categories()
+        {
+            Mock<IProductsRepository> mock = new Mock<IProductsRepository>();
+
+            mock.Setup(m => m.Products).Returns(new Product[] {
+                new Product {ProductID = 1, Name = "P1", Category = "Apples"},
+                new Product {ProductID = 2, Name = "P2", Category = "Apples"},
+                new Product {ProductID = 3, Name = "P3", Category = "Plums"},
+                new Product {ProductID = 4, Name = "P4", Category = "Oranges"},
+            }.AsQueryable());
+
+            NavController controller = new NavController(mock.Object);
+
+            string[] result = ((IEnumerable<string>)controller.Menu().Model).ToArray();
+
+            Assert.AreEqual(result.Length, 3);
+            Assert.AreEqual(result[0], "Apples");
+            Assert.AreEqual(result[1], "Oranges");
+            Assert.AreEqual(result[2], "Plums");
+        }
+
+        [TestMethod]
+        public void Indicates_Selected_Category()
+        {
+            Mock<IProductsRepository> mock = new Mock<IProductsRepository>();
+
+            mock.Setup(m => m.Products).Returns(new Product[] {
+               new Product {ProductID = 1, Name = "P1", Category = "Apples"},
+               new Product {ProductID = 4, Name = "P2", Category = "Oranges"}
+              
+            }.AsQueryable());
+                        
+            NavController target = new NavController(mock.Object);
+
+            string categoryToSelect = "Apples";
+
+            string result = target.Menu(categoryToSelect).ViewBag.SelectedCategory;
+            /*
+                Обратите внимание, что мы не должны приводить значение свойства из ViewBag. Это одно из
+                преимуществ использования объекта ViewBag перед ViewData.
+             */
+
+            Assert.AreEqual(categoryToSelect, result);
+        }
+
+        [TestMethod]
+        public void Generate_Category_Specific_Product_Count()
+        {
+            Mock<IProductsRepository> mock = new Mock<IProductsRepository>();
+            mock.Setup(m => m.Products).Returns(new Product[] {
+                new Product {ProductID = 1, Name = "P1", Category = "Cat1"},
+                new Product {ProductID = 2, Name = "P2", Category = "Cat2"},
+                new Product {ProductID = 3, Name = "P3", Category = "Cat1"},
+                new Product {ProductID = 4, Name = "P4", Category = "Cat2"},
+                new Product {ProductID = 5, Name = "P5", Category = "Cat3"}
+            }.AsQueryable());
+
+            ProductController controller = new ProductController(mock.Object);
+            controller.PageSize = 3;
+
+            int res1 = ((ProductsListViewModel)controller.List("Cat1", 1).Model).PagingInfo.TotalItems;
+            int res2 = ((ProductsListViewModel)controller.List("Cat2", 1).Model).PagingInfo.TotalItems;
+            int res3 = ((ProductsListViewModel)controller.List("Cat3", 1).Model).PagingInfo.TotalItems;
+            int allres = ((ProductsListViewModel)controller.List(null, 1).Model).PagingInfo.TotalItems;
+
+            Assert.AreEqual(res1, 2);
+            Assert.AreEqual(res2, 2);
+            Assert.AreEqual(res3, 1);
+            Assert.AreEqual(allres, 5);            
+        }       
     }
 }

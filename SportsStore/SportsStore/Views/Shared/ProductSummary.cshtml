@@ -9,5 +9,14 @@
 <div class="item">
     <h3>@Model.Name</h3>
     @Model.Description
+    
+    @*Добавим кнопку "купить"*@
+    @using (Html.BeginForm("AddToCart", "Cart"))
+    {
+        @Html.HiddenFor(x => x.ProductID)
+        @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+        <input type="submit" value="+ Добавить в корзину" />
+    }
+
     <h4>@Model.Price.ToString("c")</h4>
 </div>
