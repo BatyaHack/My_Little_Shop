@@ -4,8 +4,8 @@
 
 @Html.ActionLink("Home", "List", "Product")
 @*Мы добавили ссылку под названием Home, которая будет отображаться в верхней части списка
-категорий и приведет пользователя на первую страницу со списком всех товаров, без фильтра по
-категории*@
+    категорий и приведет пользователя на первую страницу со списком всех товаров, без фильтра по
+    категории*@
 
 @foreach (var item in Model)
 {
@@ -16,8 +16,16 @@
     category = item,
     page = 1
 },
-    new
-    {
-        @class = item == ViewBag.SelectedCategory ? "selected" : null
-    })
+        new
+        {
+            @class = item == ViewBag.SelectedCategory ? "selected" : null
+        })
 }
+
+@Html.RouteLink("Корзина", new
+{
+    controller = "Cart",
+    action = "Index",
+    returnUrl = Request.Url.PathAndQuery
+}
+)

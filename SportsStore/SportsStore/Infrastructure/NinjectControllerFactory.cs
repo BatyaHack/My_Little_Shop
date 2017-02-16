@@ -50,12 +50,12 @@ namespace SportsStore.Infrastructure
 
             // Так как IProductsRepository должен осуществлять обращение к БД и получать данный
             // Мы типа делам то что интерфейс нам вернул данные
-            mock.Setup(m => m.Products).Returns(new List<Product>
-            {
-                 new Product { Name = "Football", Price = 25 },
-                 new Product { Name = "Surf board", Price = 179 },
-                 new Product { Name = "Running shoes", Price = 95 }
-            }.AsQueryable());
+            //mock.Setup(m => m.Products).Returns(new List<Product>
+            //{
+            //     new Product { Name = "Football", Price = 25 },
+            //     new Product { Name = "Surf board", Price = 179 },
+            //     new Product { Name = "Running shoes", Price = 95 }
+            //}.AsQueryable());
 
             //Устанавливаем, что мы должны получать эту заглушку(реализацию), когда спользуем интерфейс  IProductsRepository в контроллере            
             // В прогормме EssentialTools мы использовали .To<КлассРеализация> тогда объект КлассРеализация будет создаваться каждый раз при выозове интерфейс
@@ -64,6 +64,13 @@ namespace SportsStore.Infrastructure
 
 
             ninjectKernel.Bind<IProductsRepository>().To<EFProductRepository>(); //Делаем реальную привязку, что при вызова IProductsRepository должна использоваться реализация EFProductRepository
+
+
+            //Связываем интерфейс IOrderProcessor с реализацией EmailOrderProcessor
+            EmailSettings settings = new EmailSettings();
+
+            ninjectKernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>().WithConstructorArgument("settings", settings);
         }
+
     }
 }

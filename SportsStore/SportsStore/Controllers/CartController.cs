@@ -13,53 +13,91 @@ namespace SportsStore.Controllers
     public class CartController : Controller
     {
         private IProductsRepository repository;
+        private IOrderProcessor orderProcessor;
 
-        public CartController(IProductsRepository repo)
+        public CartController(IProductsRepository repo, IOrderProcessor pocess)
         {
             repository = repo;
+            orderProcessor = pocess;
         }
 
-        public ViewResult Index(string returnUrl)
+        public ViewResult Index(Cart cart ,string returnUrl)
         {
             return View(new CartIndexViewModel {
-                Cart = GetCart(),
+                //Cart = GetCart(), ***
+                Cart = cart,
                 ReturnUrl = returnUrl
             } );
         }
 
-        public RedirectToRouteResult AddToCart(int productId, string returnUrl)
+        //Метод для представления корзины
+        public PartialViewResult Summary(Cart cart)
+        {
+            return PartialView(cart);
+        }
+
+        [HttpPost]
+        public ViewResult Checkout(Cart cart, ShippingDetails shippingDetails) //для этого метода есть тект
+        {
+            if (cart.Lines.Count() == 0)
+            {
+                ModelState.AddModelError("","Ваша карзина пуста");
+            }
+
+            if (ModelState.IsValid) //если нет ошибок
+            {
+                orderProcessor.ProcessOrder(cart, shippingDetails);
+                cart.Clear();
+                return View("Complere");
+            }
+            else
+            {
+                return View(shippingDetails);
+            }
+        }
+
+        public ViewResult Checkout() //Вызываем форму для заполнения покупок
+        {
+            return View(new ShippingDetails());
+        }
+
+        public RedirectToRouteResult AddToCart(Cart cart, int productId, string returnUrl)
         {
             Product product = repository.Products.FirstOrDefault(p => p.ProductID == productId);
 
             if (product != null)
             {
-                GetCart().AddItem(product, 1);
+                //GetCart().AddItem(product, 1); *** 
+                cart.AddItem(product, 1);
             }
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        public RedirectToRouteResult RemoveFromCart(int productId, string returnUrl)
+        public RedirectToRouteResult RemoveFromCart(Cart cart, int productId, string returnUrl)
         {
             Product product = repository.Products.FirstOrDefault(p => p.ProductID == productId);
 
             if (product != null)
             {
-                GetCart().RemoveLine(product);
+                //GetCart().RemoveLine(product); ***
+                cart.RemoveLine(product);
             }
 
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        private Cart GetCart()
-        {
-            Cart cart = (Cart)Session["Cart"];
-            if (cart == null)
-            {
-                cart = new Cart();
-                Session["Cart"] = cart;
-            }
-            return cart;
-        }
+
+        #region До добавление свясвязи между классом Cart и CartModleBinder ***
+        //private Cart GetCart()
+        //{
+        //    Cart cart = (Cart)Session["Cart"];
+        //    if (cart == null)
+        //    {
+        //        cart = new Cart();
+        //        Session["Cart"] = cart;
+        //    }
+        //    return cart;
+        //}
 
         /*По поводу этого контроллера есть несколько замечаний. Первое касается того, что мы используем
 состояние сессии ASP.NET для сохранения и извлечения объектов Cart. Это задача метода GetCart.
@@ -76,5 +114,8 @@ RemoveFromCart вызывают метод RedirectToAction. В результа
 отправляется HTTP-инструкция перенаправления, которая сообщает браузеру запросить новый URL.
 В этом случае мы сообщаем браузеру запросить URL, который будет вызывать метод действия Index
 контроллера Cart.*/
+        #endregion
+
+
     }
 }

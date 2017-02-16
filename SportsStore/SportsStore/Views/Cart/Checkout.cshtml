@@ -1,0 +1,42 @@
+﻿@model SportsStore.Models.Entities.ShippingDetails
+
+@{
+    ViewBag.Title = "Покупка";
+}
+
+<h2>Заказ</h2>
+
+@using (Html.BeginForm())
+{
+    //добавляем  вывод ошибок валидации
+    @Html.ValidationSummary()
+    <h3>Доставить по:</h3>
+    <div>Ваше Имя: @Html.EditorFor(x => x.Name)</div>
+    <h3>Введите адрес:</h3>
+    <div>Линия 1: @Html.EditorFor(x => x.Line1)</div>
+    <div>Линия 2: @Html.EditorFor(x => x.Line2)</div>
+    <div>Линия 3: @Html.EditorFor(x => x.Line3)</div>
+
+    <div>
+        Город @Html.DropDownListFor(x => x.City, new[] {
+              new SelectListItem {Text="Донецк", Value="Dinetsk" },
+               new SelectListItem {Text="Киев", Value="Kiev" },
+                new SelectListItem {Text="Харьков", Value="Xarcov" },
+                 new SelectListItem {Text="Днепр", Value="Dnepr" }
+          }, "Список городов")
+    </div>
+
+    <div>Штат: @Html.EditorFor(x => x.State)</div>
+    <div>Zip: @Html.EditorFor(x => x.Zip)</div>
+    <div>Страна: @Html.EditorFor(x => x.Country)</div>
+
+    <h3>Опции</h3>
+    <label>
+        @Html.EditorFor(x => x.GifWrap)
+        В подарок
+    </label>
+
+    <p align="center">
+        <input class="actionButtons" type="submit" value="Заказать">
+    </p>
+}

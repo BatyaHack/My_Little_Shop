@@ -14,7 +14,7 @@
     @using (Html.BeginForm("AddToCart", "Cart"))
     {
         @Html.HiddenFor(x => x.ProductID)
-        @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+        @Html.Hidden("returnUrl", Request.Url.PathAndQuery) //получаем текущий URL
         <input type="submit" value="+ Добавить в корзину" />
     }
 
