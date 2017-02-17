@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/Admin.css" rel="stylesheet" type="text/css">
+    <style>
+        .TestClass {
+            padding-right: 20px !important;
+        }
+
+        .editor-field {
+            margin-bottom: .8em;
+        }
+
+        .editor-label {
+            font-weight: bold;
+        }
+
+            .editor-label:after {
+                content: ":";
+            }
+
+        .text-box {
+            width: 25em;
+        }
+
+        .multi-line {
+            height: 5em;
+            font-family: Segoe UI, Verdana;
+        }
+    </style>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    @*Мы передавали из метода действия Edit специальные данные через TempData
+        теперь будем выводить их. если они есть*@
+    <div>
+        @if (TempData["message"] != null)
+        {
+            <div class="Message">@TempData["message"]</div>
+        }
+    </div>
+
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>
+
+@*Преимущество обработки сообщения в шаблоне заключается в том, что
+пользователи увидят его не зависимо от того, какая страница будет
+отображаться после того, как они сохранят изменения. На данный момент мы
+возвращаем их на страницу со списком товаров, но мы могли бы изменить рабочий
+поток и отображать какое-нибудь другое представление, а пользователи все равно
+увидят сообщение (при условии, что другое представление использует тот же
+макет).*@

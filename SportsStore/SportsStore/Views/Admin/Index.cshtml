@@ -1,0 +1,79 @@
+﻿@model IEnumerable<SportsStore.Models.Entities.Product>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Админка</h2>
+@*<p>
+        @Html.ActionLink("Добавить", "Create")
+    </p>
+
+    <table>
+        <tr>
+            <th>@Html.DisplayNameFor(modle => modle.Name)</th> @*DisplayNameFor - выводит имя свойства*@
+@*<th>@Html.DisplayNameFor(modle => modle.Description)</th>
+        <th>@Html.DisplayNameFor(modle => modle.Price)</th>
+        <th>@Html.DisplayNameFor(modle => modle.Category)</th>
+    </tr>*@
+
+@*@foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(x => item.Name)</td>
+            <td>@Html.DisplayFor(x => item.Description)</td>
+            <td>@Html.DisplayFor(x => item.Price)</td>
+            <td>@Html.DisplayFor(x => item.Category)</td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ProductID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ProductID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ProductID })
+            </td>
+        </tr>
+    }*@
+@*</table>*@
+
+
+@*Разметка выше слишком громоздкая и мы должны сделать ее проще*@
+
+<br>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Цена</th>
+        <th>Действие</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ProductID</td>
+            <td>@Html.ActionLink(item.Name, "Edit", new { item.ProductID })</td>
+            <td class="TestClass">@item.Price.ToString("c")</td>
+            <td>
+                @using (Html.BeginForm("Delete", "Admin"))
+            {
+                @Html.Hidden("ProductID", item.ProductID)
+                <input type="submit" value="Delete">
+            }
+        </td>
+    </tr>
+    }   
+</table>
+
+<p>
+    @Html.ActionLink("Добавить новый товар", "Create")
+</p>
+
+
+
+
+
+
+
+
+
