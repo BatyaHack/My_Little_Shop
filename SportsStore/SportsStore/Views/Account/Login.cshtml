@@ -1,0 +1,25 @@
+﻿@model SportsStore.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Логин";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";    
+}
+
+
+<div class="test">
+    <h2>Аундентификация</h2>
+    <hr>
+    <p>
+        Пожалуйста, введите логин и пароль
+    </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel();
+        <input type="submit" value="Логин">
+    }
+</div>
+
+@* @Html.ValidationSummary(true) - отключает ErrorMessage от свойств Name и Password, так как нанм не нужно, что бы сообщения об ошибках дублировались
+    Так как ошибки валадации для Name и Password выводтся под полями. А  ValidationSummary используется что бы вывести ошибку которую мы передаем из котроллера*@

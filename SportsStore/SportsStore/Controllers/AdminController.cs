@@ -9,6 +9,7 @@ using SportsStore.Models.Entities;
 
 namespace SportsStore.Controllers
 {
+    [Authorize] //говорим, что к этому контролеру имеют доступ только авторизированные пользователи. Настройку данной авторизации мы проводим в Web.config
     public class AdminController : Controller
     {
         //Данный контроллер используется бля администрирования

@@ -70,7 +70,8 @@ namespace SportsStore.Infrastructure
             EmailSettings settings = new EmailSettings();
 
             ninjectKernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>().WithConstructorArgument("settings", settings);
-        }
 
+            ninjectKernel.Bind<IAuthProvider>().To<FormsAuthProvider>();
+        }
     }
 }
